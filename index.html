@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TDAH — Est-ce que ça me ressemble ?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F4EFE6;
+    --ink: #18130E;
+    --yellow: #EFC320;
+    --orange: #C94F1A;
+    --muted: #8A7D6F;
+    --paper: #EAE3D5;
+    --border: #C9BFB0;
+    --green: #1E5C3A;
+    --red: #A82318;
+    --blue: #1B4B72;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .header {
+    border-bottom: 2px solid var(--ink);
+    padding: 0.9rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--cream);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .header-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.55rem;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+  }
+
+  .progress-bar {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0 0;
+  }
+
+  .prog-track {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: var(--ink);
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  .prog-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .screen { display: none; }
+  .screen.active {
+    display: block;
+    animation: fadein 0.35s cubic-bezier(.4,0,.2,1);
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .intro { padding-top: 3rem; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1rem;
+  }
+
+  .big-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 9vw, 4.8rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .big-title em {
+    font-style: italic;
+    color: var(--orange);
+  }
+
+  .rule {
+    width: 48px;
+    height: 3px;
+    background: var(--yellow);
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #3A3028;
+    max-width: 520px;
+    margin-bottom: 2rem;
+  }
+
+  .intro-body strong { font-weight: 500; }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.65rem;
+    color: var(--muted);
+  }
+
+  .qblock { padding-top: 2.5rem; }
+
+  .q-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.65rem;
+  }
+
+  .q-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.55rem, 4.5vw, 2.1rem);
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+
+  .q-sub {
+    font-size: 0.87rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 1.75rem;
+    line-height: 1.55;
+  }
+
+  .check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    border: 1.5px solid var(--border);
+    padding: 0.9rem 1.1rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .check-item:hover { border-color: var(--ink); background: var(--paper); }
+  .check-item.on { border-color: var(--ink); background: var(--paper); }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.15rem;
+    transition: all 0.15s;
+  }
+
+  .check-item.on .check-box {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .check-item.on .check-box::after {
+    content: '✓';
+    color: var(--yellow);
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .check-text { font-size: 0.92rem; line-height: 1.55; }
+  .check-text em { font-style: italic; color: var(--muted); font-size: 0.84rem; }
+
+  .hint {
+    border-left: 3px solid var(--yellow);
+    padding: 0.85rem 1.1rem;
+    background: var(--paper);
+    font-size: 0.84rem;
+    line-height: 1.65;
+    color: #3A3028;
+    margin-bottom: 1.5rem;
+  }
+
+  .scale-wrap { margin-bottom: 2rem; }
+
+  .scale-row {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .scale-btn {
+    flex: 1;
+    border: 1.5px solid var(--border);
+    background: none;
+    padding: 0.85rem 0.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .scale-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .scale-btn.on { background: var(--ink); border-color: var(--ink); color: var(--yellow); }
+
+  .scale-ends {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .btn-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-main {
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    padding: 0.95rem 1.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.15s;
+  }
+
+  .btn-main:hover { background: var(--orange); transform: translateY(-1px); }
+  .btn-main:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; }
+
+  .btn-back {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.84rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0;
+    transition: color 0.15s;
+  }
+
+  .btn-back:hover { color: var(--ink); }
+
+  .calc-screen { padding: 5rem 0; text-align: center; }
+  .calc-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; margin-bottom: 1.25rem; }
+  .dots span { font-size: 2.5rem; animation: blink 1.4s infinite; opacity: 0.2; }
+  .dots span:nth-child(2) { animation-delay: 0.25s; }
+  .dots span:nth-child(3) { animation-delay: 0.5s; }
+  @keyframes blink { 0%,100%{opacity:.15} 50%{opacity:1} }
+
+  .results { padding-top: 2.5rem; }
+
+  .verdict-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 2px solid var(--ink);
+    padding: 0.4rem 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .verdict-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  .verdict-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .res-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.9rem, 5.5vw, 2.9rem);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .res-summary {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    color: #3A3028;
+    max-width: 580px;
+    margin-bottom: 2.5rem;
+  }
+
+  .axes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 2px solid var(--ink);
+    gap: 1px;
+    background: var(--ink);
+    margin-bottom: 2.5rem;
+  }
+
+  .axis-cell { background: var(--cream); padding: 1.4rem 1rem; text-align: center; }
+
+  .axis-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.57rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+  }
+
+  .axis-score {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.6rem;
+  }
+
+  .axis-bar { height: 3px; background: var(--border); max-width: 72px; margin: 0 auto; overflow: hidden; }
+  .axis-bar-fill { height: 100%; background: var(--ink); width: 0%; transition: width 1.1s cubic-bezier(.4,0,.2,1) 0.2s; }
+
+  .profile-section { margin-bottom: 2.5rem; }
+
+  .sec-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .symp-cards { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .symp-card {
+    border: 1.5px solid var(--border);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .symp-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.05rem; }
+  .symp-name { font-weight: 500; font-size: 0.93rem; margin-bottom: 0.2rem; }
+  .symp-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+
+  .understand-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1.5px solid var(--border);
+    margin-bottom: 2.5rem;
+  }
+
+  .under-cell { background: var(--cream); padding: 1.25rem; }
+
+  .under-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .under-list { list-style: none; }
+  .under-list li {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    padding: 0.35rem 0;
+    border-bottom: 1px dashed var(--border);
+    display: flex;
+    gap: 0.5rem;
+  }
+  .under-list li:last-child { border-bottom: none; }
+  .under-list li::before { content: '→'; color: var(--orange); flex-shrink: 0; }
+
+  .nuance-box {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    padding: 1.6rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .nuance-box .sec-title { margin-bottom: 1rem; font-size: 1.2rem; }
+  .nuance-box .sec-title::after { background: var(--ink); }
+
+  .nuance-text { font-size: 0.9rem; line-height: 1.75; color: #3A3028; }
+  .nuance-text p + p { margin-top: 0.75rem; }
+
+  .res-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .disclaimer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 560px) {
+    .header { padding: 0.75rem 1rem; }
+    .wrap { padding: 0 1rem 3.5rem; }
+    .axes-grid { grid-template-columns: 1fr; }
+    .understand-grid { grid-template-columns: 1fr; }
+    .scale-row { gap: 0.2rem; }
+    .scale-btn { padding: 0.65rem 0.1rem; font-size: 0.7rem; }
+  }
+
+  @media print {
+    .header, .btn-row, .res-actions, .progress-bar { display: none !important; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">TDAH · auto-exploration</div>
+  <div class="header-note">outil de réflexion — pas un diagnostic</div>
+</header>
+
+<main class="wrap">
+
+  <div class="progress-bar" id="progBar">
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <div class="prog-label" id="progLabel"></div>
+  </div>
+
+  <!-- SCREEN 0 : INTRO -->
+  <div class="screen active" id="s0">
+    <div class="intro">
+      <p class="eyebrow">// auto-exploration symptômes</p>
+      <h1 class="big-title">Est-ce que<br>le TDAH<br><em>me ressemble</em>&nbsp;?</h1>
+      <div class="rule"></div>
+      <p class="intro-body">
+        Ce questionnaire t'aide à <strong>explorer si tes difficultés correspondent au profil du TDAH adulte</strong> — pas à diagnostiquer quoi que ce soit. L'idée : mettre des mots sur ton vécu, comprendre les différents visages du TDAH, et voir ce qui résonne vraiment.
+      </p>
+      <div class="tags">
+        <span class="tag">≈ 6–8 min</span>
+        <span class="tag">adultes non diagnostiqué·es</span>
+        <span class="tag">aucune donnée collectée</span>
+        <span class="tag">8 thèmes</span>
+      </div>
+      <button class="btn-main" onclick="go(1)">Commencer →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 : ATTENTION -->
+  <div class="screen" id="s1">
+    <div class="qblock">
+      <p class="q-meta">Thème 01 / 08 — Attention & concentration</p>
+      <h2 class="q-title">Ces situations t'arrivent-elles souvent ?</h2>
+      <p class="q-sub">Coche tout ce qui se produit régulièrement — pas juste une fois de temps en temps</p>
+      <div class="check-list" id="c1">
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je commence beaucoup de choses et j'en finis peu <em>(tâches, projets, lectures)</em></span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Mon attention décroche même quand je veux me concentrer — ce n'est pas un manque de motivation</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je me perds dans les détails ou les digressions et j'oublie l'objectif initial</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Lire un texte long demande un effort disproportionné — je relis les mêmes phrases sans les retenir</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je perds le fil des conversations si elles durent trop longtemps ou si je ne suis pas actif·ve dedans</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Les tâches ennuyeuses mais importantes sont quasi impossibles à démarrer</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" onclick="go(2)">Continuer →</button>
+        <button class="btn-back" onclick="go(0)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 : HYPERFOCUS -->
+  <div class="screen" id="s2">
+    <div class="qblock">
+      <p class="q-meta">Thème 02 / 08 — Hyperfocus & intérêts</p>
+      <h2 class="q-title">L'autre face de l'attention</h2>
+      <p class="q-sub">Le TDAH n'est pas qu'un manque d'attention — c'est une <em>irrégularité</em> de l'attention</p>
+      <div class="hint">Une des particularités les moins connues du TDAH : la capacité à entrer dans des états de concentration totale et intense sur des sujets qui captivent — parfois au point de perdre la notion du temps, de l'heure, de la faim.</div>
+      <div class="check-list" id="c2">
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Certains sujets m'absorbent totalement — je peux passer des heures dessus sans m'en rendre compte</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Quand je suis dans cet état, je perds la notion du temps, je n'entends plus les gens autour</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Mes centres d'intérêt changent fréquemment — des passions intenses qui s'éteignent parfois aussi vite</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Ce contraste est frappant : impossible de me concentrer sur des choses obligatoires, mais totalement absorbé·e par ce que j'aime</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'ai du mal à m'arrêter quand je suis hyperfocalisé·e — même si je devrais dormir ou manger</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" onclick="go(3)">Continuer →</button>
+        <button class="btn-back" onclick="go(1)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 : AGITATION -->
+  <div class="screen" id="s3">
+    <div class="qblock">
+      <p class="q-meta">Thème 03 / 08 — Agitation & impulsivité</p>
+      <h2 class="q-title">Un moteur interne difficile à éteindre</h2>
+      <p class="q-sub">L'hyperactivité adulte ressemble souvent moins à "bouger partout" et plus à une agitation intérieure permanente</p>
+      <div class="check-list" id="c3">
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Même au repos, j'ai un sentiment d'agitation intérieure — un moteur qui tourne sans s'arrêter</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'ai besoin de stimulation constante — le silence ou l'attente passive sont difficiles à supporter</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je dis ou fais des choses impulsives que je regrette ensuite <em>(mots dits trop vite, achats, décisions)</em></span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'ai du mal à attendre : files d'attente, conversations lentes, processus qui prennent du temps</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je coupe la parole ou je complète les phrases des autres sans vraiment m'en rendre compte</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je m'ennuie très vite si les choses n'avancent pas assez rapidement</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" onclick="go(4)">Continuer →</button>
+        <button class="btn-back" onclick="go(2)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 : MÉMOIRE -->
+  <div class="screen" id="s4">
+    <div class="qblock">
+      <p class="q-meta">Thème 04 / 08 — Mémoire de travail & organisation</p>
+      <h2 class="q-title">La mémoire "en direct" et la gestion du quotidien</h2>
+      <p class="q-sub">La mémoire de travail — ce qu'on retient sur le moment — est souvent le point faible du TDAH</p>
+      <div class="check-list" id="c4">
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je perds régulièrement des objets du quotidien <em>(clés, téléphone, lunettes, papiers importants)</em></span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'oublie des rendez-vous, engagements ou tâches — même ceux qui comptent pour moi</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je vais dans une pièce pour quelque chose et j'oublie quoi en arrivant — très souvent</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Mon environnement est souvent en désordre même quand je ne le veux pas</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Les systèmes d'organisation que j'essaie ne durent jamais longtemps</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Estimer le temps qu'une tâche prendra est difficile — je sous-estime presque toujours</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" onclick="go(5)">Continuer →</button>
+        <button class="btn-back" onclick="go(3)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5 : ÉMOTIONS -->
+  <div class="screen" id="s5">
+    <div class="qblock">
+      <p class="q-meta">Thème 05 / 08 — Émotions & sensibilité</p>
+      <h2 class="q-title">La dimension émotionnelle, souvent oubliée</h2>
+      <p class="q-sub">La dérégulation émotionnelle est l'un des aspects les moins connus du TDAH — et des plus invalidants</p>
+      <div class="hint">Le TDAH touche aussi les émotions : pas parce qu'on "manque de maturité", mais parce que les mécanismes de régulation émotionnelle sont neurologiquement liés aux mêmes circuits que l'attention.</div>
+      <div class="check-list" id="c5">
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Mes émotions — surtout la frustration — arrivent vite et fort, même pour des choses "pas importantes"</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je suis très sensible au rejet ou à la critique — même une remarque anodine peut me blesser profondément <em>(Rejection Sensitive Dysphoria)</em></span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Mes humeurs changent rapidement — je peux passer de très bien à très mal en peu de temps</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Quand je suis émotionnellement touché·e, il m'est très difficile de fonctionner normalement</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'ai parfois du mal à gérer ma frustration de façon proportionnée à la situation</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" onclick="go(6)">Continuer →</button>
+        <button class="btn-back" onclick="go(4)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6 : PROCRASTINATION -->
+  <div class="screen" id="s6">
+    <div class="qblock">
+      <p class="q-meta">Thème 06 / 08 — Procrastination & démarrage</p>
+      <h2 class="q-title">La paralysie du démarrage</h2>
+      <p class="q-sub">Pas de la paresse — un dysfonctionnement du circuit de motivation / récompense</p>
+      <div class="check-list" id="c6">
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je procrastine massivement — pas par manque d'envie mais par incapacité réelle à démarrer</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'ai besoin d'urgence ou de pression pour avancer <em>(deadline imminente, peur des conséquences)</em></span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je m'engage dans des activités moins importantes pour éviter la tâche qui compte vraiment</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je ressens de la honte ou de la culpabilité intense vis-à-vis de mon manque de productivité</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Les projets personnels importants stagnent depuis des mois ou des années malgré ma volonté</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je travaille souvent "sous pression de la dernière minute" — ça fonctionne, mais c'est épuisant</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" onclick="go(7)">Continuer →</button>
+        <button class="btn-back" onclick="go(5)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 7 : MASQUAGE -->
+  <div class="screen" id="s7">
+    <div class="qblock">
+      <p class="q-meta">Thème 07 / 08 — Compensation & masquage</p>
+      <h2 class="q-title">Le coût invisible de s'adapter</h2>
+      <p class="q-sub">Beaucoup d'adultes avec TDAH ont développé des stratégies pour paraître "normaux" — au prix d'une fatigue énorme</p>
+      <div class="hint">Le masquage est particulièrement fréquent chez les femmes, les personnes à haut potentiel intellectuel, et celles élevées dans des environnements très structurés. Il peut retarder le diagnostic de plusieurs décennies.</div>
+      <div class="check-list" id="c7">
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je fais d'énormes efforts pour paraître organisé·e ou attentif·ve — mais ça m'épuise profondément</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'ai l'air de bien fonctionner "de l'extérieur" mais le chaos intérieur est constant</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">J'ai développé des systèmes très rigides pour compenser mes difficultés — si le système se brise, tout s'effondre</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Les gens sont souvent surpris quand je parle de mes difficultés — "mais tu es si organisé·e !"</span></div>
+        <div class="check-item" onclick="tog(this)"><div class="check-box"></div><span class="check-text">Je me souviens d'avoir eu ces difficultés à l'école ou à l'adolescence, même si elles n'étaient pas identifiées</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" onclick="go(8)">Continuer →</button>
+        <button class="btn-back" onclick="go(6)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 8 : RESSENTI GLOBAL -->
+  <div class="screen" id="s8">
+    <div class="qblock">
+      <p class="q-meta">Thème 08 / 08 — Ressenti global</p>
+      <h2 class="q-title">Dans l'ensemble, comment ça pèse sur ta vie ?</h2>
+      <p class="q-sub">Pas ce que les autres observent — ce que <em>toi</em> tu ressens vraiment</p>
+      <div class="scale-wrap">
+        <div class="scale-row" id="scale8">
+          <button class="scale-btn" onclick="setScale(1)" data-v="1">1</button>
+          <button class="scale-btn" onclick="setScale(2)" data-v="2">2</button>
+          <button class="scale-btn" onclick="setScale(3)" data-v="3">3</button>
+          <button class="scale-btn" onclick="setScale(4)" data-v="4">4</button>
+          <button class="scale-btn" onclick="setScale(5)" data-v="5">5</button>
+          <button class="scale-btn" onclick="setScale(6)" data-v="6">6</button>
+          <button class="scale-btn" onclick="setScale(7)" data-v="7">7</button>
+          <button class="scale-btn" onclick="setScale(8)" data-v="8">8</button>
+          <button class="scale-btn" onclick="setScale(9)" data-v="9">9</button>
+          <button class="scale-btn" onclick="setScale(10)" data-v="10">10</button>
+        </div>
+        <div class="scale-ends">
+          <span>Pas vraiment d'impact</span>
+          <span>Impact très fort sur ma vie</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-main" id="calcBtn" onclick="doCalc()" disabled>Voir mon profil →</button>
+        <button class="btn-back" onclick="go(7)">← Retour</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN CALC -->
+  <div class="screen" id="scalc">
+    <div class="calc-screen">
+      <h2 class="calc-title">Analyse de ton profil</h2>
+      <div class="dots"><span>·</span><span>·</span><span>·</span></div>
+    </div>
+  </div>
+
+  <!-- SCREEN RESULTS -->
+  <div class="screen" id="sres">
+    <div class="results">
+
+      <div class="verdict-pill" id="rPill">
+        <div class="verdict-dot" id="rDot"></div>
+        <span class="verdict-label" id="rLabel"></span>
+      </div>
+
+      <h2 class="res-title" id="rTitle"></h2>
+      <p class="res-summary" id="rSummary"></p>
+
+      <div class="axes-grid">
+        <div class="axis-cell">
+          <div class="axis-label">Profil<br>inattentif</div>
+          <div class="axis-score" id="axInatt">—</div>
+          <div class="axis-bar"><div class="axis-bar-fill" id="barInatt"></div></div>
+        </div>
+        <div class="axis-cell">
+          <div class="axis-label">Profil<br>hyperactif / impulsif</div>
+          <div class="axis-score" id="axHyper">—</div>
+          <div class="axis-bar"><div class="axis-bar-fill" id="barHyper"></div></div>
+        </div>
+        <div class="axis-cell">
+          <div class="axis-label">Impact<br>sur le quotidien</div>
+          <div class="axis-score" id="axImpact">—</div>
+          <div class="axis-bar"><div class="axis-bar-fill" id="barImpact"></div></div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <h3 class="sec-title">Symptômes les plus présents chez toi</h3>
+        <div class="symp-cards" id="sympCards"></div>
+      </div>
+
+      <div class="understand-grid">
+        <div class="under-cell">
+          <div class="under-head">Ce qui peut expliquer ton vécu</div>
+          <ul class="under-list" id="explainList"></ul>
+        </div>
+        <div class="under-cell">
+          <div class="under-head">Ce que le TDAH n'est PAS</div>
+          <ul class="under-list">
+            <li>Un manque de volonté ou de caractère</li>
+            <li>Une question d'intelligence</li>
+            <li>Quelque chose qu'on "invente" ou qu'on simule</li>
+            <li>Un problème réservé aux enfants turbulents</li>
+            <li>Une mode — c'est reconnu depuis les années 90</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="nuance-box">
+        <h3 class="sec-title">Pour aller plus loin</h3>
+        <div class="nuance-text" id="nuanceText"></div>
+      </div>
+
+      <div class="res-actions">
+        <button class="btn-main" onclick="restart()">↺ Recommencer</button>
+      </div>
+
+      <div class="disclaimer">
+        Cet outil n'est pas un outil médical. Il aide à réfléchir sur son vécu, pas à diagnostiquer.<br>
+        Seul·e un·e professionnel·le de santé qualifié·e peut établir un diagnostic de TDAH.<br>
+        Si ces difficultés t'impactent fortement, en parler à un médecin ou un psychologue reste la meilleure étape.
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+const TOTAL = 8;
+let scaleVal = null;
+
+function go(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const id = (n === 'calc') ? 'scalc' : (n === 'res') ? 'sres' : 's' + n;
+  document.getElementById(id).classList.add('active');
+  updateProg(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProg(n) {
+  const bar = document.getElementById('progBar');
+  if (n === 0 || n === 'calc' || n === 'res') { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  document.getElementById('progFill').style.width = ((n - 1) / TOTAL * 100) + '%';
+  document.getElementById('progLabel').textContent = (n - 1) + ' / ' + TOTAL;
+}
+
+function tog(el) { el.classList.toggle('on'); }
+
+function setScale(v) {
+  scaleVal = v;
+  document.querySelectorAll('.scale-btn').forEach(b => {
+    b.classList.toggle('on', parseInt(b.dataset.v) === v);
+  });
+  document.getElementById('calcBtn').disabled = false;
+}
+
+function countChecked(id) {
+  return document.querySelectorAll('#' + id + ' .check-item.on').length;
+}
+
+function doCalc() {
+  go('calc');
+  setTimeout(showResults, 1600);
+}
+
+function showResults() {
+  const att  = countChecked('c1'); // 0–6
+  const hyp  = countChecked('c2'); // 0–5
+  const imp  = countChecked('c3'); // 0–6
+  const mem  = countChecked('c4'); // 0–6
+  const emo  = countChecked('c5'); // 0–5
+  const proc = countChecked('c6'); // 0–6
+  const mask = countChecked('c7'); // 0–5
+  const sc   = scaleVal || 5;      // 1–10
+
+  // Inattentif : att + hyp + mem + proc  max = 6+5+6+6 = 23
+  const inattRaw = att + hyp + mem + proc;
+  const inattPct = Math.round((inattRaw / 23) * 100);
+
+  // Hyperactif/impulsif : imp + emo  max = 6+5 = 11
+  const hyperRaw = imp + emo;
+  const hyperPct = Math.round((hyperRaw / 11) * 100);
+
+  // Impact quotidien : mask + scale  max = 5+10 = 15
+  const impactRaw = mask + sc;
+  const impactPct = Math.round((impactRaw / 15) * 100);
+
+  // Global
+  const global = Math.round(inattPct * 0.38 + hyperPct * 0.32 + impactPct * 0.30);
+
+  // VERDICT
+  let label, dotColor, title, summary, explains, nuance;
+
+  if (global >= 68) {
+    label    = 'Profil fortement concordant';
+    dotColor = '#1E5C3A';
+    title    = 'Beaucoup de points résonnent avec le TDAH.';
+    summary  = 'Tes réponses montrent une accumulation significative de symptômes qui correspondent au tableau clinique du TDAH adulte — en particulier la constellation inattention / impulsivité / dérégulation émotionnelle. Ce n\'est pas un diagnostic, mais c\'est un signal qui mérite attention.';
+    explains = [
+      'Un cerveau TDAH manque de dopamine dans le cortex préfrontal — d\'où les difficultés à démarrer, maintenir l\'effort, réguler les émotions',
+      'L\'irrégularité de l\'attention (pas son absence) est la signature du TDAH : trop sur ce qui plaît, insuffisante sur le reste',
+      'Le masquage pendant des années peut créer une fatigue chronique et une faible estime de soi durable',
+    ];
+    nuance = `<p>Le profil que tu décris correspond à ce qu'on appelle le <strong>TDAH adulte</strong> — souvent non diagnostiqué parce que les critères ont longtemps été écrits pour les enfants hyperactifs, pas pour les adultes qui compensent en silence.</p><p>Si ces difficultés existent depuis l'enfance (avant 12 ans environ) et impactent plusieurs domaines de ta vie, cela vaut la peine d'en parler à un professionnel de santé.</p><p>Rappelle-toi : reconnaître ces mécanismes chez soi, c'est comprendre comment ton cerveau fonctionne — pas chercher des excuses.</p>`;
+  } else if (global >= 45) {
+    label    = 'Profil partiellement concordant';
+    dotColor = '#C9A227';
+    title    = 'Certains aspects résonnent, d\'autres moins.';
+    summary  = 'Tes réponses montrent des similitudes partielles avec le profil TDAH. Ce n\'est ni un "oui" ni un "non" clair — certains mécanismes que tu décris correspondent, d\'autres peuvent s\'expliquer différemment (anxiété, burn-out, troubles du sommeil, haut potentiel…).';
+    explains = [
+      'Anxiété chronique et TDAH partagent beaucoup de symptômes — difficultés de concentration, agitation, procrastination',
+      'Le burn-out peut produire un tableau très similaire au TDAH, surtout sur l\'attention et la mémoire de travail',
+      'Le haut potentiel intellectuel peut masquer un TDAH pendant longtemps grâce à la compensation cognitive',
+    ];
+    nuance = `<p>Le tableau que tu décris est <strong>ambigu</strong> — ce qui est fréquent. Le TDAH co-existe souvent avec l'anxiété, la dépression ou d'autres troubles, ce qui rend la lecture difficile.</p><p>Ce qui peut t'aider : noter des exemples concrets de tes difficultés dans différents contextes, et en parler à un médecin ou un psychologue. Pas forcément pour un bilan TDAH tout de suite — mais pour démêler ce qui se passe.</p><p>Le simple fait de mieux nommer ce que tu vis peut déjà changer beaucoup de choses.</p>`;
+  } else {
+    label    = 'Profil peu concordant';
+    dotColor = '#1B4B72';
+    title    = 'Ces symptômes correspondent peu au profil TDAH.';
+    summary  = 'D\'après tes réponses, les symptômes typiques du TDAH adulte semblent peu présents ou peu intenses dans ton vécu. Ça ne veut pas dire que tes difficultés ne sont pas réelles — juste qu\'elles s\'expliquent probablement mieux par autre chose.';
+    explains = [
+      'Le stress, le surmenage et le manque de sommeil produisent des symptômes très proches du TDAH',
+      'La dépression et l\'anxiété touchent profondément la concentration et la motivation',
+      'Des difficultés apparues à l\'âge adulte sont moins caractéristiques du TDAH que celles présentes depuis l\'enfance',
+    ];
+    nuance = `<p>Tes difficultés sont probablement mieux expliquées par <strong>d'autres facteurs</strong> — surcharge, anxiété, manque de sommeil, contexte de vie difficile. Toutes ces choses méritent attention, indépendamment du TDAH.</p><p>Si tu as quand même une intuition forte qui persiste, ça vaut toujours la peine d'en parler à un médecin. Un auto-questionnaire reste limité et un professionnel peut voir des éléments qu'un outil numérique ne capte pas.</p>`;
+  }
+
+  // TOP 3 symptoms
+  const allS = [
+    { score: att,  max: 6,  icon: '🎯', name: 'Inattention', desc: 'Difficulté à maintenir l\'attention, finir les tâches, suivre un fil directeur.' },
+    { score: hyp,  max: 5,  icon: '⚡', name: 'Hyperfocus', desc: 'Absorption totale dans certains sujets — l\'autre face de l\'attention TDAH.' },
+    { score: imp,  max: 6,  icon: '🌀', name: 'Agitation / Impulsivité', desc: 'Moteur intérieur, difficulté à attendre, paroles ou décisions impulsives.' },
+    { score: mem,  max: 6,  icon: '🗂', name: 'Mémoire de travail', desc: 'Pertes d\'objets, oublis, désorganisation, mauvaise estimation du temps.' },
+    { score: emo,  max: 5,  icon: '🌊', name: 'Dérégulation émotionnelle', desc: 'Frustrations intenses, sensibilité au rejet, sautes d\'humeur rapides.' },
+    { score: proc, max: 6,  icon: '⏳', name: 'Procrastination / démarrage', desc: 'Paralysie du démarrage, travail sous pression, honte liée à la productivité.' },
+    { score: mask, max: 5,  icon: '🎭', name: 'Masquage / compensation', desc: 'Effort énorme pour paraître fonctionnel·le, chaos intérieur invisible.' },
+  ];
+
+  const top3 = allS.map(s => ({ ...s, pct: Math.round(s.score / s.max * 100) }))
+                   .sort((a, b) => b.pct - a.pct)
+                   .slice(0, 3);
+
+  // RENDER
+  document.getElementById('rDot').style.background   = dotColor;
+  document.getElementById('rPill').style.borderColor = dotColor;
+  document.getElementById('rLabel').textContent      = label;
+  document.getElementById('rTitle').textContent      = title;
+  document.getElementById('rSummary').textContent    = summary;
+
+  document.getElementById('axInatt').textContent  = inattPct  + '%';
+  document.getElementById('axHyper').textContent  = hyperPct  + '%';
+  document.getElementById('axImpact').textContent = impactPct + '%';
+
+  document.getElementById('sympCards').innerHTML = top3.map(s => `
+    <div class="symp-card">
+      <div class="symp-icon">${s.icon}</div>
+      <div class="symp-body">
+        <div class="symp-name">${s.name} <span style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted);font-weight:400">${s.pct}%</span></div>
+        <div class="symp-desc">${s.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('explainList').innerHTML = explains.map(e => `<li>${e}</li>`).join('');
+  document.getElementById('nuanceText').innerHTML  = nuance;
+
+  go('res');
+
+  setTimeout(() => {
+    document.getElementById('barInatt').style.width  = inattPct  + '%';
+    document.getElementById('barHyper').style.width  = hyperPct  + '%';
+    document.getElementById('barImpact').style.width = impactPct + '%';
+  }, 150);
+}
+
+function restart() {
+  document.querySelectorAll('.check-item').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.scale-btn').forEach(el => el.classList.remove('on'));
+  document.getElementById('calcBtn').disabled = true;
+  scaleVal = null;
+  go(0);
+}
+</script>
+</body>
+</html>
